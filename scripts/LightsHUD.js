@@ -17,6 +17,7 @@
  * Alan Davies
  * ----------------------------------------------------------------------------
  */
+//import { LightsHUDSubmenuApplicationClass } from "./settings.js" ;
 
 class LightsHUD {
 
@@ -1440,18 +1441,61 @@ Hooks.once("init", () => {
       type: String,
     });
   }
+
+  game.settings.registerMenu("LightsHUD", "subMenu", {
+    name: "My Settings Submenu",
+    label: "Settings Menu Label",      // The text label used in the button
+    hint: "A description of what will occur in the submenu dialog.",
+    icon: "fas fa-bars",               // A Font Awesome icon used in the submenu button
+    type: LightsHUDSubmenuApplicationClass,   // A FormApplication subclass which should be created
+    restricted: true                   // Restrict this submenu to gamemaster only?
+  });
+  
   game.settings.register("LightsHUD", "debug", {
     name: "Debug",
     hint: "Enable Debug.",
     scope: "world",
-    config: true,
-    restricted: true,
-    type: Boolean,
-    default: false
+    config: false,
+    type: Object,
+    default:  {"debug":false}
     });
+  
 
   LightsHUD.debug();
   LightsHUD.clBanner();
   });
+
+  class LightsHUDSubmenuApplicationClass extends FormApplication {
+
+    isDebug;
+
+    constructor(){
+      super();
+    }
+
+    static get defaultOptions(){
+      return mergeObject(super.defaultOptions, {
+      classes: ['form'],
+      popOut: true,
+      template: `modules/LightsHUD/scripts/templates/SubMenu.html`,
+      id: 'SubMenu',
+      title: 'SubMenu',
+    });
+    };
+
+    getData() {
+        this.isDebug = game.settings.get('LightsHUD', 'debug');
+        return this.isDebug;
+    }
+ 
+    _updateObject(event, formData) {
+        
+        const data = expandObject(formData);
+        console.log ("Update object", data)
+        game.settings.set('LightsHUD', 'debug', data);
+    }
+       
+ 
+}
 
   

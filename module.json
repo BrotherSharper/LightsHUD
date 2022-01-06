@@ -28,7 +28,7 @@
         }
     ],
     "esmodules": [
-        "/scripts/LightsHUD.js"
+        "/scripts/LightsHUD.js","/scripts/settings.js"
     ],
     "socket": true,
     "styles": [
